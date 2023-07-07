@@ -1,10 +1,11 @@
 import {postData} from './services/requests';
 
-const forms = () => {
+const forms = (state) => {
     const form = document.querySelectorAll('form'),
           inputs = document.querySelectorAll('input'),
           upload = document.querySelectorAll('[name="upload"]'),
-          textareas = document.querySelectorAll('textarea');
+          textareas = document.querySelectorAll('textarea'),
+          selects = document.querySelectorAll('select');
 
     const message = {
         loading: 'Пожалуйста, подождите. Идёт загрузка...',
@@ -30,6 +31,10 @@ const forms = () => {
         });
 
         textareas.forEach(item => {
+            item.value = '';
+        });
+
+        selects.forEach(item => {
             item.value = '';
         });
     }
@@ -69,6 +74,17 @@ const forms = () => {
             const formData = new FormData(item);
             let api;
             item.closest('.popup-design') || item.classList.contains('calc_form') ? api = path.designer : api = path.question;
+
+            if (item.getAttribute('data-form') === 'calc') {
+                const resultBlock = document.querySelector(state.selector);
+
+                if (/\d/.test(state.result)) {
+                    formData.append('sum', state.result);
+                    resultBlock.textContent = state.success;
+                } else {
+                    resultBlock.textContent = state.failure;
+                }
+            }
 
             postData(api, formData)
                 .then(res => {
