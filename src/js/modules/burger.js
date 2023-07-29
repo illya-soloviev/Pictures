@@ -5,7 +5,6 @@ const burger = (menuSelector, burgerSelector) => {
     menu.style.display = 'none';
 
     burger.addEventListener('click', () => {
-        console.log('12');
         if (menu.style.display == 'none' && window.screen.availWidth < 993) {
             menu.style.display = 'block';
         } else {
